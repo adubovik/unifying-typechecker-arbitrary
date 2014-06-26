@@ -1,0 +1,6 @@
+Example of unifying desciption of type checker and Arbitrary-like producing logic.
+Inspired by the paper "Invertible Syntax Descriptions: Unifying Parsing and Pretty Printing".
+
+Dependencies: logict package.
+
+Run Test.main for demonstration.
