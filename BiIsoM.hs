@@ -42,12 +42,12 @@ mkBiIsoM adc bdc = BiIsoM
          BiIsoM m a (x,xs) (y,ys) b ->
          BiIsoM m x (    ) (    ) y ->
          BiIsoM m a    xs     ys  b
-(<*>) ~BiIsoM{ forward  = fM :: a -> m ((x,xs), (y,ys) -> m b)
-             , backward = bM :: b -> m ((y,ys), (x,xs) -> m a)
-             }
-      ~BiIsoM{ forward  = fm :: x -> m ((), () -> m y)
-             , backward = bm :: y -> m ((), () -> m x)
-             } =
+(<*>) BiIsoM{ forward  = fM :: a -> m ((x,xs), (y,ys) -> m b)
+            , backward = bM :: b -> m ((y,ys), (x,xs) -> m a)
+            }
+      BiIsoM{ forward  = fm :: x -> m ((), () -> m y)
+            , backward = bm :: y -> m ((), () -> m x)
+            } =
   BiIsoM
   { forward  = (\a -> do
       ((x,xs), fy) <- fM a
@@ -69,10 +69,9 @@ mkBiIsoM adc bdc = BiIsoM
          BiIsoM m i is os o ->
          BiIsoM m i is os o ->
          BiIsoM m i is os o
-(<|>) ~BiIsoM{forward = fx, backward = bx}
+(<|>)  BiIsoM{forward = fx, backward = bx}
       ~BiIsoM{forward = fy, backward = by} =
   BiIsoM
   { forward  = \i -> fx i `mplus` fy i
   , backward = \o -> bx o `mplus` by o
   }
-
