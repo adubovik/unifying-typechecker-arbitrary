@@ -7,22 +7,22 @@ import FromList
 
 import Type
 import Exp
-import Language
+import IsoLanguage
 import BiIsoM
 
 testTypeCheck :: IO ()
 testTypeCheck = do
-  let test :: Exp -> [Type] -> IO ()
-      test expr res =
+  let test :: [Type] -> Exp -> IO ()
+      test res expr =
         print $ runForward exp expr == ((fromList res) :: LL Type)
-  test (Lit 1) [TInt]
-  test (Add (Lit 1) (Lit 2)) [TInt]
-  test (Eq (Lit 1) (Lit 2)) [TBool]
-  test (Eq (Lit 1) (Eq (Lit 1) (Lit 3))) []
-  test (Eq (Eq (Lit 2) (Lit 4)) (Eq (Lit 1) (Lit 3))) [TBool]
+  test [ TInt] (Lit 1)
+  test [ TInt] (Add (Lit 1) (Lit 2))
+  test [TBool] (Eq (Lit 1) (Lit 2))
+  test [TBool] (Eq (Eq (Lit 2) (Lit 4)) (Eq (Lit 1) (Lit 3)))
+  test [     ] (Eq (Lit 1) (Eq (Lit 1) (Lit 3)))
 
-arbitraryCheck :: IO ()
-arbitraryCheck = do
+testArbitrary :: IO ()
+testArbitrary = do
   let run f = do
         let es = take 20 $ unLL $ f
         putStrLn $ show (length es) ++ ":\n" ++
@@ -34,4 +34,4 @@ arbitraryCheck = do
 main :: IO ()
 main = do
   testTypeCheck
-  arbitraryCheck
+  testArbitrary
